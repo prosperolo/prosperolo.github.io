@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PoseDreamer: Scalable Photorealistic Human Data Generation with Diffusion Models</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+
+    <!-- ════ HERO ════ -->
+    <section class="hero">
+      <h1>PoseDreamer</h1>
+      <p class="subtitle">Scalable Photorealistic Human Data Generation<br>with Diffusion Models</p>
+      <div class="venue-badge">arXiv 2026</div>
+
+      <div class="authors">
+        <span>Lorenza Prospero<sup>1,2</sup></span>
+        <span>Orest Kupyn<sup>2</sup></span>
+        <span>Ostap Viniavskyi<sup>3</sup></span>
+        <span>Joao F. Henriques<sup>2</sup></span>
+        <span>Christian Rupprecht<sup>2</sup></span>
+      </div>
+
+      <div class="affiliations">
+        <span class="aff"><sup>1</sup> The Podium Institute, University of Oxford</span>
+        <span class="aff-sep">&middot;</span>
+        <span class="aff"><sup>2</sup> Visual Geometry Group, University of Oxford</span>
+        <span class="aff-sep">&middot;</span>
+        <span class="aff"><sup>3</sup> Ukrainian Catholic University</span>
+      </div>
+
+      <div class="links">
+        <a href="#" class="link-btn"><span class="link-icon">📄</span> Paper</a>
+        <a href="#" class="link-btn link-btn--outline"><span class="link-icon">💻</span> Code (Coming Soon)</a>
+        <a href="https://huggingface.co/datasets/prosperolo/PoseDreamer" class="link-btn"><span class="link-icon">🤗</span> Dataset</a>
+      </div>
+
+      <div class="hero-img">
+        <img src="static/diversity-2rows.png" alt="PoseDreamer diverse generated samples" />
+      </div>
+    </section>
+
+    <!-- ════ TL;DR ════ -->
+    <section class="section reveal" id="tldr">
+      <h2 class="section-title">TL;DR</h2>
+      <p class="lead">
+        We present <strong>PoseDreamer</strong>, a scalable pipeline for generating photorealistic human datasets with precise 3D pose control.
+        The system combines controllable generation with <em>Direct Preference Optimization</em> for control alignment, hard sample mining, and filtering to produce a large synthetic dataset with reliable annotations.
+      </p>
+      <div class="fig">
+        <img src="static/figure1.png" alt="PoseDreamer dataset samples" />
+      </div>
+    </section>
+
+    <!-- ════ ABSTRACT ════ -->
+    <section class="section reveal" id="abstract">
+      <h2 class="section-title">Abstract</h2>
+      <p>
+        Acquiring labeled datasets for 3D human mesh estimation is challenging due to depth ambiguities and the inherent difficulty of annotating 3D geometry from monocular images. Existing datasets are either real, with manually annotated 3D geometry and limited scale, or synthetic, rendered from 3D engines that provide precise labels but suffer from limited photorealism, low diversity, and high production costs.
+      </p>
+      <p>
+        In this work, we explore a third path: <strong>generated data</strong>. We introduce PoseDreamer, a novel pipeline that leverages diffusion models to generate large-scale synthetic datasets with 3D mesh annotations. Our approach combines controllable image generation with Direct Preference Optimization for control alignment, curriculum-based hard sample mining, and multi-stage quality filtering. Together, these components naturally maintain correspondence between 3D labels and generated images, while prioritizing challenging samples to maximize dataset utility.
+      </p>
+      <p>
+        Using PoseDreamer, we generate more than <strong>500,000</strong> high-quality synthetic samples, achieving a <strong>76% improvement</strong> in image-quality metrics compared to rendering-based datasets. Models trained on PoseDreamer achieve performance comparable to or superior to those trained on real-world and traditional synthetic datasets.
+      </p>
+    </section>
+
+    <!-- ════ METHOD ════ -->
+    <section class="section reveal" id="method">
+      <h2 class="section-title">Method</h2>
+      <div class="fig">
+        <img src="static/pipeline-bigger.png" alt="PoseDreamer pipeline overview" />
+      </div>
+
+      <h3>Direct Preference Optimization</h3>
+      <p>
+        We use Direct Preference Optimization to enhance control precision, significantly reducing OKS error on a held-out dataset compared to the base model.
+      </p>
+      <div class="dpo-wrap">
+        <img src="static/dpolora_circles.png" alt="DPO alignment visualization" />
+      </div>
+    </section>
+
+    <!-- ════ KEY RESULTS ════ -->
+    <section class="section reveal" id="results">
+      <h2 class="section-title">Key Results</h2>
+
+      <div class="highlights">
+        <div class="highlight-card">
+          <div class="highlight-number">76%</div>
+          <div class="highlight-label">Image Quality Gain</div>
+          <p class="highlight-detail">FID <strong>1.72</strong> · IS <strong>9.78</strong></p>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-number">500K+</div>
+          <div class="highlight-label">Synthetic Samples</div>
+          <p class="highlight-detail">With precise 3D mesh annotations</p>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-number">42%</div>
+          <div class="highlight-label">DPO Alignment Gain</div>
+          <p class="highlight-detail">OKS error reduction</p>
+        </div>
+      </div>
+
+      <div class="result-block reveal">
+        <h3>Outperforms Rendering-Based Data on ITW Benchmarks</h3>
+        <p>As sole training data, PoseDreamer beats BEDLAM on all in-the-wild benchmarks (PVE ↓).</p>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr><th>Training Data</th><th>UBody ↓</th><th>MPII ↓</th><th>MSCOCO ↓</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="method">BEDLAM</td><td>146.3</td><td>141.1</td><td>163.7</td></tr>
+              <tr><td class="method">PoseDreamer</td><td class="best">97.6</td><td class="best">122.3</td><td class="best">129.4</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="result-block reveal">
+        <h3>Complementary to Existing Synthetic Data</h3>
+        <p>
+          Training on PoseDreamer combined with BEDLAM — just two datasets — consistently matches or outperforms baselines that rely on five or more real and synthetic datasets. This holds across multiple model scales (ViT-S and ViT-L backbones) and dataset sizes (up to 1.5M instances), suggesting that high-quality generated data can replace the need for curating many heterogeneous sources.
+        </p>
+      </div>
+
+      <div class="result-block reveal">
+        <h3>Domain-Specific Generation</h3>
+        <div class="domain-grid">
+          <div class="fig">
+            <img src="static/yoga-generations.png" alt="PoseDreamer yoga pose generations" />
+          </div>
+          <div class="domain-text">
+            <p>Replacing 30K random images with yoga-specific samples cuts PVE from 199.6 to <strong>171.1</strong> on MPII Yoga.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ BIBTEX ════ -->
+    <section class="section reveal" id="citation">
+      <h2 class="section-title">Citation</h2>
+      <pre class="bibtex"><code>@article{prospero2026posedreamer,
+  title     = {PoseDreamer: Scalable Photorealistic Human Data Generation with Diffusion Models},
+  author    = {Prospero, Lorenza and Kupyn, Orest and Viniavskyi, Ostap and Henriques, Joao F. and Rupprecht, Christian},
+  journal   = {arXiv preprint},
+  year      = {2026}
+}</code></pre>
+    </section>
+
+  </main>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
